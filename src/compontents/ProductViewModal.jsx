@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { Divider } from '@mui/material';
 import { useState } from 'react'
+import Status from './Status';
 import { MdClose, MdDone } from 'react-icons/md';
 
 function ProductViewModal({open, setOpen, product, isAvailable}) {
@@ -55,21 +56,19 @@ function ProductViewModal({open, setOpen, product, isAvailable}) {
                   )}
 
                   {isAvailable ? (
-                    <p>In stock</p>
-                    //<Status
-                     // text="In Stock"
-                     // icon={MdDone}
-                     // bg="bg-teal-200"
-                     // color="text-teal-900"
-                    ///>
+                    <Status
+                      text="In Stock"
+                      icon={MdDone}
+                      bg="bg-teal-200"
+                      color="text-teal-900"
+                    />
                   ) : ( 
-                    <p>Out of stock</p>
-                    //<Status
-                     // text="Out-Of-Stock"
-                     // icon={MdClose}
-                     // bg="bg-rose-200"
-                      //color="text-rose-700"
-                    ///>
+                    <Status
+                      text="Out-Of-Stock"
+                      icon={MdClose}
+                      bg="bg-rose-200"
+                      color="text-rose-700"
+                    />
                   )}
                 </div>
 
