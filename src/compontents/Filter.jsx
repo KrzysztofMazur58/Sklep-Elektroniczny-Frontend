@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, FormControl, InputLabel, MenuItem, Select, Tooltip } from "@mui/material";
 import { FiArrowDown, FiArrowUp, FiRefreshCw, FiSearch } from "react-icons/fi";
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Filter = () => {
     const categories = [
@@ -9,22 +10,63 @@ const Filter = () => {
         { categoryId: 3, categoryName: "Furniture" },
     ];
 
+    const [searchParams] = useSearchParams();
+    const params = new URLSearchParams(searchParams);
+    const pathname = useLocation().pathname;
+    const navigate = useNavigate();
+
     const [category, setCategory] = useState("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("asc");
 
+    useEffect(() => {
+        const currentCategory = searchParams.get("category") || "all";
+        const currentSortOrder = searchParams.get("sortby") || "asc";
+        const currentSearchTerm = searchParams.get("keyword") || "";
+
+        setCategory(currentCategory);
+        setSortOrder(currentSortOrder);
+        setSearchTerm(currentSearchTerm);
+    }, [searchParams]);
+
+    useEffect(() => { 
+        const handler = setTimeout(() => {
+            if (searchTerm) {
+                searchParams.set("keyword", searchTerm);
+            } else {
+                searchParams.delete("keyword");
+            }
+            navigate(`${pathname}?${searchParams.toString()}`);
+        }, 700);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [searchParams, searchTerm, navigate, pathname]);
+
     const handleCategoryChange = (event) => {
+        const selectedCategory = event.target.value;
+
+        if (selectedCategory === "all") {
+            params.delete("category");
+        } else {
+            params.set("category", selectedCategory);
+        }
+        navigate(`${pathname}?${params}`);
         setCategory(event.target.value);
     };
 
     const toggleSortOrder = () => {
-        setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+        setSortOrder((prevOrder) => {
+            const newOrder = (prevOrder === "asc") ?  "desc" : "asc";
+            params.set("sortby", newOrder);
+            navigate(`${pathname}?${params}`);
+            return newOrder;
+        })
     };
 
     const handleClearFilters = () => {
-        setCategory("all");
-        setSearchTerm("");
-        setSortOrder("asc");
+        navigate({ pathname : window.location.pathname });
     };
 
     return (
