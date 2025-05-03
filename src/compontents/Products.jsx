@@ -6,6 +6,8 @@ import { fetchCategories, fetchProducts } from "../store/actions";
 import Filter from "./Filter";
 import useProductFilter from "./useProductFilter";
 import Loader from "./Loader";
+import { Pagination } from "@mui/material";
+import Paginations from "./Paginations";
 
 const Products = () => {
     
@@ -13,7 +15,7 @@ const Products = () => {
         (state) => state.errors
     );
 
-    const {products, categories} = useSelector(
+    const {products, categories, pagination} = useSelector(
         (state) => state.products
     )
     const dispatch = useDispatch();
@@ -43,6 +45,12 @@ const Products = () => {
                         products.map((item, i) => <ProductCard key={i} {...item} />
 
                         )}
+                    </div>
+                    <div className="flex justify-center pt-10">
+                        <Paginations
+                            numberOfPage = {pagination?.totalPages}
+                            totalProducts = {pagination?.totalElements}
+                        />
                     </div>
                 </div>
             )}
