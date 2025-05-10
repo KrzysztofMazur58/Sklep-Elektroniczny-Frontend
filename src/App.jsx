@@ -9,6 +9,7 @@ import Navbar from './compontents/Navbar'
 import { Toaster } from 'react-hot-toast'
 import Cart from './compontents/cart/Cart'
 import LogIn from './compontents/auth/LogIn'
+import PrivateRoute from './compontents/PrivateRoute'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,7 +22,10 @@ function App() {
         <Route path='/' element={ <Home />}/>
         <Route path='/products' element={ <Products />}/>
         <Route path='/cart' element={ <Cart />}/>
-        <Route path='/login' element={ <LogIn />}/>
+        <Route path='/' element={<PrivateRoute publicPage />}>
+            <Route path='/login' element={ <LogIn />}/>
+            <Route path='/register' element={ <Register />}/>
+          </Route>
       </Routes>
     </Router>
 
