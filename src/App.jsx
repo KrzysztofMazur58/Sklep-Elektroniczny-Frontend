@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast'
 import Cart from './compontents/cart/Cart'
 import LogIn from './compontents/auth/LogIn'
 import PrivateRoute from './compontents/PrivateRoute'
+import Register from './compontents/auth/Register'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,6 +23,7 @@ function App() {
         <Route path='/' element={ <Home />}/>
         <Route path='/products' element={ <Products />}/>
         <Route path='/cart' element={ <Cart />}/>
+        
         <Route path='/' element={<PrivateRoute publicPage />}>
             <Route path='/login' element={ <LogIn />}/>
             <Route path='/register' element={ <Register />}/>

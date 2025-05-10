@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineLogin } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
-
 import { useDispatch } from "react-redux";
 import { authenticateSignInUser } from "../../store/actions";
 import toast from "react-hot-toast";
 import InputField from "../InputField";
+
 
 const LogIn = () => {
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ const LogIn = () => {
         console.log("Login Click");
         dispatch(authenticateSignInUser(data, toast, reset, navigate, setLoader));
     };
-    
+
     return (
         <div className="min-h-[calc(100vh-64px)] flex justify-center items-center">
             <form
@@ -69,7 +69,7 @@ const LogIn = () => {
                 type="submit">
                 {loader ? (
                     <>
-                    Loading...
+                     Loading...
                     </>
                 ) : (
                     <>Login</>

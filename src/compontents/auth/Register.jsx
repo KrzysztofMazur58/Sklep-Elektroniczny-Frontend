@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { FaUserPlus } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import InputField from '../shared/InputField';
 import { useDispatch } from 'react-redux';
 import { registerNewUser } from '../../store/actions';
 import toast from 'react-hot-toast';
+import InputField from '../InputField';
 
 
 const Register = () => {

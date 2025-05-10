@@ -1,3 +1,4 @@
+
 import { Badge } from "@mui/material";
 import { useState } from "react";
 import { FaShoppingCart, FaSignInAlt, FaStore } from "react-icons/fa";
@@ -111,4 +112,5 @@ const Navbar = () => {
 }
 
 export default Navbar;
+
  

@@ -1,8 +1,8 @@
-import api from "../../api/api";
+import api from "../../api/api"
 
 export const fetchProducts = (queryString) => async (dispatch) => {
-    try{
-        dispatch({type : "IS_FETCHING"});
+    try {
+        dispatch({ type: "IS_FETCHING" });
         const { data } = await api.get(`/public/products?${queryString}`);
         dispatch({
             type: "FETCH_PRODUCTS",
@@ -13,16 +13,20 @@ export const fetchProducts = (queryString) => async (dispatch) => {
             totalPages: data.totalPages,
             lastPage: data.lastPage,
         });
-        dispatch({type : "IS_SUCCESS"});
-    } catch (error){
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
         console.log(error);
-        dispatch({type : "IS_ERROR", payload: error?.response?.data?.message || "Fail with fetch products",});
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch products",
+         });
     }
 };
 
+
 export const fetchCategories = () => async (dispatch) => {
-    try{
-        dispatch({type : "CATEGORY_LOADER"});
+    try {
+        dispatch({ type: "CATEGORY_LOADER" });
         const { data } = await api.get(`/public/categories`);
         dispatch({
             type: "FETCH_CATEGORIES",
@@ -33,12 +37,16 @@ export const fetchCategories = () => async (dispatch) => {
             totalPages: data.totalPages,
             lastPage: data.lastPage,
         });
-        dispatch({type : "IS_ERROR"});
-    } catch (error){
+        dispatch({ type: "IS_ERROR" });
+    } catch (error) {
         console.log(error);
-        dispatch({type : "IS_ERROR", payload: error?.response?.data?.message || "Fail with fetch category",});
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch categories",
+         });
     }
 };
+
 
 export const addToCart = (data, qty = 1, toast) => 
     (dispatch, getState) => {
@@ -59,6 +67,7 @@ export const addToCart = (data, qty = 1, toast) =>
             toast.error("Out of stock");
         }
 };
+
 
 export const increaseCartQuantity = 
     (data, toast, currentQuantity, setCurrentQuantity) =>
@@ -87,6 +96,8 @@ export const increaseCartQuantity =
 
     };
 
+
+
 export const decreaseCartQuantity = 
     (data, newQuantity) => (dispatch, getState) => {
         dispatch({
@@ -96,13 +107,15 @@ export const decreaseCartQuantity =
         localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
     }
 
-    export const removeFromCart =  (data, toast) => (dispatch, getState) => {
-        dispatch({type: "REMOVE_CART", payload: data });
-        toast.success(`${data.productName} removed from cart`);
-        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
-    }
+export const removeFromCart =  (data, toast) => (dispatch, getState) => {
+    dispatch({type: "REMOVE_CART", payload: data });
+    toast.success(`${data.productName} removed from cart`);
+    localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+}
 
-    export const authenticateSignInUser 
+
+
+export const authenticateSignInUser 
     = (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
         try {
             setLoader(true);
@@ -134,4 +147,11 @@ export const registerNewUser
         } finally {
             setLoader(false);
         }
+};
+
+
+export const logOutUser = (navigate) => (dispatch) => {
+    dispatch({ type:"LOG_OUT" });
+    localStorage.removeItem("auth");
+    navigate("/login");
 };
