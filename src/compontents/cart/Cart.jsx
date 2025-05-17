@@ -4,12 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ItemContent from "./ItemContent";
 import CartEmpty from "./CartEmpty";
+import { fetchUserCart } from "../../store/actions";
 import { formatPrice } from "../../utils/formatPrice";
+import { useEffect } from "react";
 
 const Cart = () => {
     const dispatch = useDispatch();
     const { cart } = useSelector((state) => state.carts);
     const newCart = { ...cart };
+
+    useEffect(() => {
+    dispatch(fetchUserCart());
+    }, []);
 
     newCart.totalPrice = cart?.reduce(
         (acc, cur) => acc + Number(cur?.specialPrice) * Number(cur?.quantity), 0

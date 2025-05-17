@@ -22,40 +22,24 @@ const ItemContent = ({
   specialPrice,
   cartId,
 }) => {
-  const [currentQuantity, setCurrentQuantity] = useState(quantity);
   const dispatch = useDispatch();
 
-  // 🔍 DEBUG LOGS
-  useEffect(() => {
-    console.log("🛒 Cart item data:");
-    console.log("Product ID:", productId);
-    console.log("Product Name:", productName);
-    console.log("Image:", image);
-    console.log("Quantity:", quantity);
-    console.log("Special Price:", specialPrice);
-  }, []);
-
-  // 📦 Bezpieczne źródło obrazka
   const imageUrl = image?.startsWith("http")
     ? image
     : `${import.meta.env.VITE_BACK_END_URL}/images/${image}`;
 
-  const handleQtyIncrease = (cartItems) => {
-    dispatch(
-      increaseCartQuantity(cartItems, toast, currentQuantity, setCurrentQuantity)
-    );
+  const handleQtyIncrease = () => {
+    dispatch(increaseCartQuantity({ productId }, toast));
   };
 
-  const handleQtyDecrease = (cartItems) => {
-    if (currentQuantity > 1) {
-      const newQuantity = currentQuantity - 1;
-      setCurrentQuantity(newQuantity);
-      dispatch(decreaseCartQuantity(cartItems, newQuantity));
+  const handleQtyDecrease = () => {
+    if (quantity > 1) {
+      dispatch(decreaseCartQuantity({ productId }, toast));
     }
   };
 
-  const removeItemFromCart = (cartItems) => {
-    dispatch(removeFromCart(cartItems, toast));
+  const removeItemFromCart = () => {
+    dispatch(removeFromCart({ productId }, toast));
   };
 
   return (
@@ -77,17 +61,7 @@ const ItemContent = ({
 
           <div className="flex items-start gap-5 mt-3">
             <button
-              onClick={() =>
-                removeItemFromCart({
-                  image,
-                  productName,
-                  description,
-                  specialPrice,
-                  price,
-                  productId,
-                  quantity,
-                })
-              }
+              onClick={removeItemFromCart}
               className="flex items-center font-semibold space-x-2 px-4 py-1 text-xs border border-rose-600 text-rose-600 rounded-md hover:bg-red-50 transition-colors duration-200"
             >
               <HiOutlineTrash size={16} className="text-rose-600" />
@@ -103,38 +77,19 @@ const ItemContent = ({
 
       <div className="justify-self-center">
         <SetQuantity
-          quantity={currentQuantity}
+          quantity={quantity}
           cardCounter={true}
-          handeQtyIncrease={() =>
-            handleQtyIncrease({
-              image,
-              productName,
-              description,
-              specialPrice,
-              price,
-              productId,
-              quantity,
-            })
-          }
-          handleQtyDecrease={() =>
-            handleQtyDecrease({
-              image,
-              productName,
-              description,
-              specialPrice,
-              price,
-              productId,
-              quantity,
-            })
-          }
+          handeQtyIncrease={handleQtyIncrease}
+          handleQtyDecrease={handleQtyDecrease}
         />
       </div>
 
       <div className="justify-self-center lg:text-[17px] text-sm text-slate-600 font-semibold">
-        {formatPrice(Number(currentQuantity) * Number(specialPrice))}
+        {formatPrice(Number(quantity) * Number(specialPrice))}
       </div>
     </div>
   );
 };
+
 
 export default ItemContent;

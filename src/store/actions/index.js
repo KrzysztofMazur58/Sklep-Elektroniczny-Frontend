@@ -49,71 +49,63 @@ export const fetchCategories = () => async (dispatch) => {
 
 
 export const addToCart = (data, qty = 1, toast) => 
-    (dispatch, getState) => {
-        
-        const { products } = getState().products;
-        const getProduct = products.find(
-            (item) => item.productId === data.productId
-        );
-
-        const isQuantityExist = getProduct.quantity >= qty;
-
-        if (isQuantityExist) {
-            dispatch({ type: "ADD_CART", payload: {...data, quantity: qty}});
+    async (dispatch, getState) => {
+        try {
+            const { data: cartResponse } = await api.post(`/carts/products/${data.productId}/quantity/${qty}`);
+            dispatch({ type: "GET_USER_CART_PRODUCTS", payload: cartResponse.products, totalPrice: cartResponse.totalPrice, cartId: cartResponse.cartId });
+            localStorage.setItem("cartItems", JSON.stringify(cartResponse.products));
             toast.success(`${data?.productName} added to the cart`);
-            localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
-        } else {
-            
-            toast.error("Out of stock");
+        } catch (error) {
+            toast.error("Failed to add product to cart");
         }
-};
-
-
-export const increaseCartQuantity = 
-    (data, toast, currentQuantity, setCurrentQuantity) =>
-    (dispatch, getState) => {
-        
-        const { products } = getState().products;
-        
-        const getProduct = products.find(
-            (item) => item.productId === data.productId
-        );
-
-        const isQuantityExist = getProduct.quantity >= currentQuantity + 1;
-
-        if (isQuantityExist) {
-            const newQuantity = currentQuantity + 1;
-            setCurrentQuantity(newQuantity);
-
-            dispatch({
-                type: "ADD_CART",
-                payload: {...data, quantity: newQuantity },
-            });
-            localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
-        } else {
-            toast.error("Quantity Reached to Limit");
-        }
-
     };
 
 
-
-export const decreaseCartQuantity = 
-    (data, newQuantity) => (dispatch, getState) => {
-        dispatch({
-            type: "ADD_CART",
-            payload: {...data, quantity: newQuantity},
-        });
-        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+export const increaseCartQuantity = (data, toast) => async (dispatch, getState) => {
+    try {
+        const { data: cartResponse } = await api.put(`/cart/products/${data.productId}/quantity/increase`);
+        dispatch({ type: "GET_USER_CART_PRODUCTS", payload: cartResponse.products, totalPrice: cartResponse.totalPrice, cartId: cartResponse.cartId });
+        localStorage.setItem("cartItems", JSON.stringify(cartResponse.products));
+    } catch {
+        toast.error("Quantity Reached to Limit");
     }
-
-export const removeFromCart =  (data, toast) => (dispatch, getState) => {
-    dispatch({type: "REMOVE_CART", payload: data });
-    toast.success(`${data.productName} removed from cart`);
-    localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
-}
+};
 
 
+export const decreaseCartQuantity = (data, toast) => async (dispatch, getState) => {
+    try {
+        const { data: cartResponse } = await api.put(`/cart/products/${data.productId}/quantity/delete`);
+        dispatch({ type: "GET_USER_CART_PRODUCTS", payload: cartResponse.products, totalPrice: cartResponse.totalPrice, cartId: cartResponse.cartId });
+        localStorage.setItem("cartItems", JSON.stringify(cartResponse.products));
+    } catch {
+        toast.error("Failed to update quantity");
+    }
+};
+
+
+export const removeFromCart = (data, toast) => async (dispatch, getState) => {
+    try {
+        const cartId = getState().carts.cartId;
+        await api.delete(`/carts/${cartId}/product/${data.productId}`);
+        // Pobierz aktualny koszyk z backendu
+        const { data: cartResponse } = await api.get(`/carts/users/cart`);
+        dispatch({ type: "GET_USER_CART_PRODUCTS", payload: cartResponse.products, totalPrice: cartResponse.totalPrice, cartId: cartResponse.cartId });
+        localStorage.setItem("cartItems", JSON.stringify(cartResponse.products));
+        toast.success(`${data.productName} removed from cart`);
+    } catch {
+        toast.error("Failed to remove product from cart");
+    }
+};
+
+export const fetchUserCart = () => async (dispatch) => {
+    try {
+        const { data } = await api.get("/carts/users/cart");
+        dispatch({ type: "GET_USER_CART_PRODUCTS", payload: data.products, totalPrice: data.totalPrice, cartId: data.cartId });
+        localStorage.setItem("cartItems", JSON.stringify(data.products));
+    } catch (error) {
+        
+    }
+};
 
 export const authenticateSignInUser 
     = (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {

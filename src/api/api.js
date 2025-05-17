@@ -13,7 +13,7 @@ api.interceptors.request.use(
       const token = JSON.parse(auth)?.jwtToken;
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        console.log("Dodany token JWT do nagłówka:", token); // debug
+        console.log("Dodany token JWT do nagłówka:", token);
       }
     }
 

@@ -12,6 +12,7 @@ import PrivateRoute from './compontents/PrivateRoute';
 
 import ManageCategories from './compontents/ManageCategories';
 import ManageProducts from './compontents/ManageProducts';
+import Checkout from './compontents/Checkout';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
 
           <Route element={<PrivateRoute publicPage />}>
             <Route path="/login" element={<LogIn />} />

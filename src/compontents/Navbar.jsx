@@ -79,22 +79,25 @@ const Navbar = () => {
                         </li>
                     )}
 
-                    <li className="font-[500] transition-all duration-150">
-                        <Link
-                            className={`${path === "/cart" ? "text-white font-semibold" : "text-gray-200"}`}
-                            to="/cart"
-                        >
-                            <Badge
-                                showZero
-                                badgeContent={cart?.length || 0}
-                                color="primary"
-                                overlap="circular"
-                                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    {user?.id && (
+                        <li className="font-[500] transition-all duration-150">
+                            <Link
+                                className={`${path === "/cart" ? "text-white font-semibold" : "text-gray-200"}`}
+                                to="/cart"
                             >
-                                <FaShoppingCart size={25} />
-                            </Badge>
-                        </Link>
-                    </li>
+                                <Badge
+                                    showZero
+                                    badgeContent={cart?.length || 0}
+                                    color="primary"
+                                    overlap="circular"
+                                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                >
+                                    <FaShoppingCart size={25} />
+                                </Badge>
+                            </Link>
+                        </li>
+                    )}
+
 
                     {user?.id ? (
                         <li className="font-[500] transition-all duration-150">
