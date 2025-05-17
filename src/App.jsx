@@ -1,39 +1,47 @@
-import React, { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Products from './compontents/Products'
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import Home from './compontents/home/Home'
-import Navbar from './compontents/Navbar'
-import { Toaster } from 'react-hot-toast'
-import Cart from './compontents/cart/Cart'
-import LogIn from './compontents/auth/LogIn'
-import PrivateRoute from './compontents/PrivateRoute'
-import Register from './compontents/auth/Register'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+
+import Navbar from './compontents/Navbar';
+import Home from './compontents/home/Home';
+import Products from './compontents/Products';
+import Cart from './compontents/cart/Cart';
+import LogIn from './compontents/auth/LogIn';
+import Register from './compontents/auth/Register';
+import PrivateRoute from './compontents/PrivateRoute';
+
+import ManageCategories from './compontents/ManageCategories';
+import ManageProducts from './compontents/ManageProducts';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <React.Fragment>
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path='/' element={ <Home />}/>
-        <Route path='/products' element={ <Products />}/>
-        <Route path='/cart' element={ <Cart />}/>
-        
-        <Route path='/' element={<PrivateRoute publicPage />}>
-            <Route path='/login' element={ <LogIn />}/>
-            <Route path='/register' element={ <Register />}/>
-          </Route>
-      </Routes>
-    </Router>
+      <Router>
+        <Navbar />
+        <Routes>
 
-    <Toaster position='bottom-center' />
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/cart" element={<Cart />} />
+
+          <Route element={<PrivateRoute publicPage />}>
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
+
+          <Route element={<PrivateRoute allowedRoles={['admin']} />}>
+            <Route path="/admin/categories" element={<ManageCategories />} />
+          </Route>
+
+          <Route element={<PrivateRoute allowedRoles={['admin', 'worker']} />}>
+            <Route path="/admin/products" element={<ManageProducts />} />
+          </Route>
+        </Routes>
+      </Router>
+      <Toaster position="bottom-center" />
     </React.Fragment>
-  )
+  );
 }
 
-export default App
+export default App;
+
