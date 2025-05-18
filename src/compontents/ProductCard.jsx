@@ -83,20 +83,21 @@ const ProductCard = ({
         </div>
 
         <div className="flex items-center justify-between">
-          {specialPrice ? (
-            <div className="flex flex-col">
-              <span className="text-gray-400 line-through">
-                ${Number(price).toFixed(2)}
-              </span>
-              <span className="text-xl font-bold text-slate-700">
-                ${Number(specialPrice).toFixed(2)}
-              </span>
-            </div>
-          ) : (
-            <span className="text-xl font-bold text-slate-700">
+          {specialPrice && specialPrice < price ? (
+          <div className="flex flex-col">
+            <span className="text-gray-400 line-through">
               ${Number(price).toFixed(2)}
             </span>
-          )}
+            <span className="text-xl font-bold text-slate-700">
+              ${Number(specialPrice).toFixed(2)}
+            </span>
+          </div>
+        ) : (
+          <span className="text-xl font-bold text-slate-700">
+            ${Number(price).toFixed(2)}
+          </span>
+        )}
+
 
           <button
             disabled={!isAvailable || btnLoader}

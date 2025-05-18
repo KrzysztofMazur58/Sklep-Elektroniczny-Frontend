@@ -68,16 +68,18 @@ const Navbar = () => {
                         </>
                     )}
 
-                    {user?.roles?.includes("ROLE_WORKER") && !user?.roles?.includes("ROLE_ADMIN") && (
+                    
+                    {(user?.roles?.includes("ROLE_ADMIN") || user?.roles?.includes("ROLE_WORKER")) && (
                         <li className="font-[500] transition-all duration-150">
                             <Link
-                                className={`${path === "/admin/products" ? "text-white font-semibold" : "text-gray-200"}`}
-                                to="/admin/products"
+                                className={`${path === "/admin/orders" ? "text-white font-semibold" : "text-gray-200"}`}
+                                to="/admin/orders"
                             >
-                                Manage Products
+                                Manage Orders
                             </Link>
                         </li>
                     )}
+
 
                     {user?.id && (
                         <li className="font-[500] transition-all duration-150">

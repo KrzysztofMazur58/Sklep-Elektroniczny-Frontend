@@ -14,6 +14,8 @@ import ManageCategories from './compontents/ManageCategories';
 import ManageProducts from './compontents/ManageProducts';
 import Checkout from './compontents/Checkout';
 import OrderConfirmation from './compontents/OrderConfirmation';
+import ManageOrders from './compontents/ManageOrders';
+import UserOrders from './compontents/UserOrders';
 
 function App() {
   return (
@@ -32,12 +34,20 @@ function App() {
             <Route path="/register" element={<Register />} />
           </Route>
 
+          <Route element={<PrivateRoute />}>
+            <Route path="/profile/orders" element={<UserOrders />} />
+          </Route>
+
           <Route element={<PrivateRoute allowedRoles={['admin']} />}>
             <Route path="/admin/categories" element={<ManageCategories />} />
           </Route>
 
           <Route element={<PrivateRoute allowedRoles={['admin', 'worker']} />}>
             <Route path="/admin/products" element={<ManageProducts />} />
+          </Route>
+
+          <Route element={<PrivateRoute allowedRoles={['admin', 'worker']} />}>
+            <Route path="/admin/orders" element={<ManageOrders />} />
           </Route>
         </Routes>
       </Router>
