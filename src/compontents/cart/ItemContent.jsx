@@ -1,6 +1,3 @@
-import { useState, useEffect } from "react";
-import { HiOutlineTrash } from "react-icons/hi";
-import SetQuantity from "./SetQuantity";
 import { useDispatch } from "react-redux";
 import {
   decreaseCartQuantity,
@@ -10,16 +7,19 @@ import {
 import toast from "react-hot-toast";
 import { formatPrice } from "../../utils/formatPrice";
 import truncateText from "../../utils/truncateText";
+import { HiOutlineTrash } from "react-icons/hi";
+import SetQuantity from "./SetQuantity";
 
 const ItemContent = ({
   productId,
   productName,
   image,
   description,
-  quantity,
+  quantity,   
   price,
   discount,
   specialPrice,
+  availableQuantity, 
   cartId,
 }) => {
   const dispatch = useDispatch();
@@ -29,7 +29,11 @@ const ItemContent = ({
     : `${import.meta.env.VITE_BACK_END_URL}/images/${image}`;
 
   const handleQtyIncrease = () => {
-    dispatch(increaseCartQuantity({ productId }, toast));
+    if (quantity < availableQuantity) {
+      dispatch(increaseCartQuantity({ productId }, toast));
+    } else {
+      toast.error("Nie możesz zamówić więcej niż jest dostępne w magazynie");
+    }
   };
 
   const handleQtyDecrease = () => {
@@ -81,6 +85,7 @@ const ItemContent = ({
           cardCounter={true}
           handeQtyIncrease={handleQtyIncrease}
           handleQtyDecrease={handleQtyDecrease}
+          maxQuantity={availableQuantity} 
         />
       </div>
 
@@ -91,5 +96,5 @@ const ItemContent = ({
   );
 };
 
-
 export default ItemContent;
+
